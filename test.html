@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Transaction Test</title>
+</head>
+<body>
+    <h2>Create Transaction Test</h2>
+    <form id="transactionForm" action="http://localhost:3000/create-transaction" method="POST">
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required>
+        <button type="submit">Create Transaction</button>
+    </form>
+
+    <script>
+        document.getElementById('transactionForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent default form submission
+            
+            const amount = document.getElementById('amount').value;
+            try {
+                const response = await fetch('http://localhost:3000/create-transaction', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ amount })
+                });
+                const data = await response.json();
+                
+                // Check if response is ok (status code 200-299)
+                if (!response.ok) {
+                    throw new Error('Transaction creation failed');
+                }
+                
+                alert(`Transaction created: ${data.transactionId}`);
+            } catch (error) {
+                console.error('Error creating transaction:', error);
+                alert('Failed to create transaction. Please try again.');
+            }
+        });
+    </script>
+    
+</body>
+</html>
